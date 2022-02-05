@@ -16,6 +16,7 @@
     <v-dialog v-model="fab" max-width="600px" overlay-opacity="0.9">
       <v-card>
         <NewEvent />
+        <v-btn @click="fab = !fab">Close</v-btn>
       </v-card>
     </v-dialog>
   </div>
