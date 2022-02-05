@@ -42,8 +42,13 @@ const mutations = {
     state.eventsCounter = payload.length;
   },
   ADD_EVENT: (state, payload) => {
+    payload["id"] = state.eventsCounter + 1;
     state.events.push(payload);
     state.eventsCounter++;
+  },
+  REMOVE_EVENT: (state, payload) => {
+    state.events.pop();
+    state.eventsCounter--;
   },
   SET_PAGES_DATA: (state, payload) => {
     state.home = payload[0];
@@ -62,20 +67,23 @@ const actions = {
     context.commit("SET_PAGES_DATA", [home, about, leftWidget, eventsForm]);
     console.log(payload); //temp - never used
   },
-  async GET_EVENTS(context, payload="action GET EVENTS") {
+  async GET_EVENTS(context, payload = "action GET EVENTS") {
     let data = await this.$axios.$get("/events");
     context.commit("SET_EVENTS", data);
     console.log(payload); //temp - never used
   },
 
-  SEND_FORM_DATA(context, payload) {
-    this.$axios
+  async SEND_FORM_DATA(context, payload) {
+    context.commit("ADD_EVENT", payload);
+    await this.$axios
       .$post("/events", payload)
       .then((res) => {
-        payload['id'] = this.state.eventsCounter+1;
-        context.commit("ADD_EVENT", payload);
+        this.dispatch("GET_EVENTS"); // new events from others (updating)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        context.commit("REMOVE_EVENT");
+      });
   },
 };
 

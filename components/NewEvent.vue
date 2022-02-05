@@ -1,72 +1,40 @@
 <template>
-  <v-form>
-    <div v-if="form">
-      <div>
-        <label style="display: block">
-          {{ form.fields.date.title }}
-          <div v-if="form.fields.date.type === 'string'">
-            <v-text-field v-model="dateText"></v-text-field>
-          </div>
-          <div v-if="form.fields.date.type === 'select'">
-            <v-select
-              v-model="dateSelect"
-              :items="form.fields.date.values"
-            ></v-select>
-          </div>
-        </label>
-      </div>
-      <div>
-        <label style="display: block">
-          {{ form.fields.type.title }}
-          <div v-if="form.fields.type.type === 'string'">
-            <v-text-field v-model="typeText"></v-text-field>
-          </div>
-          <div v-if="form.fields.type.type === 'select'">
-            <v-select
-              v-model="typeSelect"
-              :items="form.fields.type.values"
-            ></v-select>
-          </div>
-        </label>
-      </div>
-
-      <div>
-        <label style="display: block">
-          {{ form.fields.victims.title }}
-          <div v-if="form.fields.victims.type === 'string'">
-            <v-text-field v-model="victimsText"></v-text-field>
-          </div>
-          <div v-if="form.fields.victims.type === 'select'">
-            <v-select
-              v-model="victimsSelect"
-              :items="form.fields.victims.values"
-            ></v-select>
-          </div>
-        </label>
-      </div>
-
-      <div v-if="typeText !== '' || typeSelect !== ''">
-        <label style="display: block">
-          <div v-if="typeText === 'acid_rain' || typeSelect === 'acid_rain'">
-            {{ form.reference_fields["type.acid_rain"].acid_power.title }}
-          </div>
-          <div v-if="typeText === 'hurricane' || typeSelect === 'hurricane'">
-            {{ form.reference_fields["type.hurricane"].wind_speed.title }}
-          </div>
-          <div v-if="typeText === 'earthquake' || typeSelect === 'earthquake'">
-            {{
-              form.reference_fields["type.earthquake"].earthquake_power.title
-            }}
-          </div>
-          <div>
-            <v-text-field v-model="additionalText"></v-text-field>
-          </div>
-        </label>
-      </div>
+  <v-form v-if="eventsForm" ref="form" lazy-validation>
+    <div v-for="(field, field_key) in eventsForm.fields" :key="field_key">
+      <v-select
+        v-if="field.type == 'select'"
+        :items="field.values"
+        v-model="formData[field_key]"
+        :label="field.title"
+        required
+        :rules="rules(field.title)"
+      />
+      <v-text-field
+        v-else
+        v-model="formData[field_key]"
+        :label="field.title"
+        required
+        :rules="rules(field.title)"
+      />
     </div>
-    <v-btn @click="send" style="margin-top: 20px; display: block" type="submit"
-      >Send</v-btn
+    <div
+      v-for="(dynamic, dynamic_key) in Object.entries(
+        eventsForm.reference_fields
+      ).filter(
+        ([key, value]) => key == dynamicField + '.' + formData[dynamicField]
+      )"
+      :key="dynamic_key"
     >
+      <v-text-field
+        v-for="(field, field_key) in dynamic[1]"
+        :key="field_key"
+        v-model="formData[field_key]"
+        :label="field.title"
+        required
+        :rules="rules(field.title)"
+      />
+    </div>
+    <v-btn @click="send" type="submit">Send</v-btn>
   </v-form>
 </template>
 
@@ -78,56 +46,19 @@ export default {
     ...mapGetters(["eventsForm"]),
   },
   data: () => ({
-    formShown: false,
-    typeText: ``,
-    typeSelect: ``,
-    dateText: ``,
-    dateSelect: ``,
-    victimsText: ``,
-    victimsSelect: ``,
-    additionalText: ``,
+    formData: {},
+    dynamicField: "type",
   }),
   methods: {
-    send: function (evt) {
-      // this.$store.dispatch("GET_EVENTS"); // new events from others (updating)
-      evt.preventDefault();
-      if (
-        (this.typeText !== "" || this.typeSelect !== "") &&
-        (this.dateText !== "" || this.dateSelect !== "") &&
-        (this.victimsText !== "" || this.victimsSelect !== "") &&
-        this.additionalText !== ""
-      ) {
-        let payload = {
-          type: this.typeText !== "" ? this.typeText : this.typeSelect,
-          date: this.dateText !== "" ? this.dateText : this.dateSelect,
-          victims:
-            this.victimsText !== "" ? this.victimsText : this.victimsSelect,
-        };
-        switch (payload.type) {
-          case "acid_rain":
-            payload["acid_power"] = this.additionalText;
-            break;
-          case "hurricane":
-            payload["wind_speed"] = this.additionalText;
-            break;
-          default:
-            payload["earthquake_power"] = this.additionalText;
-            break;
-        }
-        this.$store.dispatch("SEND_FORM_DATA", payload);
-        this.typeText = ``;
-        this.typeSelect = ``;
-        this.dateText = ``;
-        this.dateSelect = ``;
-        this.victimsText = ``;
-        this.victimsSelect = ``;
-        this.additionalText = ``;
-      }
+    rules: function (title) {
+      return [(v) => !!v || "Field `" + title + "` is required"];
     },
-  },
-  computed: {
-    form: function () {
-      return this.$store.getters.eventsForm;
+    send: function (evt) {
+      evt.preventDefault();
+      if (!this.$refs.form.validate()) return false;
+      let result = JSON.parse(JSON.stringify(this.formData));
+      this.$store.dispatch("SEND_FORM_DATA", result);
+      this.$refs.form.reset();
     },
   },
 };
