@@ -1,5 +1,11 @@
 <template>
   <v-layout row>
+    <v-progress-circular
+      :size="50"
+      color="primary"
+      indeterminate
+      v-if="!events"
+    ></v-progress-circular>
     <v-flex
       xs12
       sm6
@@ -30,8 +36,8 @@
           >
           <v-card-text>
             <p v-if="item.acid_power">Acid power: {{ item.acid_power }}</p>
-            <!-- add other fields! -->
-            <!-- <p v-if="item.victims">{{ item.victims }} victims</p> -->
+            <p v-if="item.wind_speed">Wind speed: {{ item.wind_speed }}</p>
+            <p v-if="item.earthquake_power">Earthquake power: {{ item.earthquake_power }}</p>
           </v-card-text>
         </v-card>
       </v-lazy>

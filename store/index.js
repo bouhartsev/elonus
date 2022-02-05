@@ -1,8 +1,10 @@
 const state = () => ({
   title: "",
   events: [],
+  eventsCounter: 0,
   home: {},
   about: {},
+  eventsForm: {},
 });
 
 const getters = {
@@ -13,7 +15,7 @@ const getters = {
     return state.events;
   },
   eventsCounter: (state) => {
-    return state.events.length;
+    return state.eventsCounter;
   },
   eventById: (state) => {
     return (id) => {
@@ -26,6 +28,9 @@ const getters = {
   about: (state) => {
     return state.about;
   },
+  eventsForm: (state) => {
+    return state.eventsForm;
+  },
 };
 
 const mutations = {
@@ -34,6 +39,7 @@ const mutations = {
   },
   SET_EVENTS: (state, payload) => {
     state.events = payload;
+    state.eventsCounter = payload.length;
   },
   SET_PAGES_DATA: (state, payload) => {
     state.home = payload[0];

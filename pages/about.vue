@@ -1,28 +1,22 @@
 <template>
   <v-row>
     <v-col class="text-center">
-      <img
-        src="/v.png"
-        alt="Vuetify.js"
-        class="mb-5"
-      >
-      <blockquote class="blockquote">
-        &#8220;First, solve the problem. Then, write the code.&#8221;
-        <footer>
-          <small>
-            <em>&mdash;John Johnson</em>
-          </small>
-        </footer>
-      </blockquote>
+      <h2>Это описание страницы</h2>
+      <p v-html="about.text"></p>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  name: 'InspirePage',
+  name: 'AboutPage',
   created() {
     this.$store.commit("SET_TITLE", "About");
+  },
+  computed: {
+    ...mapGetters(["about"]),
   },
 }
 </script>

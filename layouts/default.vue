@@ -81,7 +81,7 @@ export default {
       ],
     };
   },
-  beforeCreate() {
+  created() {
     this.$store.dispatch("GET_PAGES_DATA", "action GET_PAGES_DATA");
   },
 };
