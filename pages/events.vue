@@ -13,11 +13,11 @@
       <v-icon v-if="fab"> mdi-close </v-icon>
       <v-icon v-else> mdi-plus</v-icon>
     </v-btn>
-    <v-dialog v-model="fab" max-width="600px" overlay-opacity="0.9">
-      <v-card>
+    <v-dialog v-model="fab" max-width="600px" overlay-opacity="0.95">
+      <v-container>
         <NewEvent />
         <v-btn @click="fab = !fab">Close</v-btn>
-      </v-card>
+      </v-container>
     </v-dialog>
   </div>
 </template>

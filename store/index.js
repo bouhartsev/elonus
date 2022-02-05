@@ -12,7 +12,7 @@ const getters = {
     return state.title;
   },
   events: (state) => {
-    return state.events;
+    return [].concat(state.events).reverse();
   },
   eventsCounter: (state) => {
     return state.eventsCounter;
@@ -41,15 +41,14 @@ const mutations = {
     state.events = payload;
     state.eventsCounter = payload.length;
   },
+  ADD_EVENT: (state, payload) => {
+    state.events.push(payload);
+  },
   SET_PAGES_DATA: (state, payload) => {
     state.home = payload[0];
     state.about = payload[1];
     state.eventsForm = payload[2];
   },
-
-  // ADD_SERVICE: (state, payload) => {
-  //   state.events.push(payload);
-  // },
 };
 
 const actions = {
@@ -60,35 +59,46 @@ const actions = {
     context.commit("SET_PAGES_DATA", [home, about, eventsForm]);
     console.log(payload); //temp - never used
   },
-  async GET_EVENTS(context, payload) {
+  async GET_EVENTS(context, payload="test") {
     let data = await this.$axios.$get("/events");
     context.commit("SET_EVENTS", data);
     console.log(payload); //temp - never used
   },
 
-  SEND_FORM_DATA(context, {type, date, victims, additionalData}) {
-    let payload = new FormData();
-    payload.append("type", type);
-    payload.append("date", date);
-    payload.append("victims", victims);
+  SEND_FORM_DATA(context, payload) {
+    // let payload = new FormData();
+    // payload.append("type", type);
+    // payload.append("date", date);
+    // payload.append("victims", victims);
 
-    switch (true) {
-      case type==="acid_rain":
-        payload.append("acid_power", additionalData.acid_power);
-      break;
-      case type==="hurricane":
-        payload.append("wind_speed", additionalData.wind_speed);
-      break;
-      case type==="earthquake":
-        payload.append("earthquake_power", additionalData.earthquake_power);
-      break;
-    }
+    // switch (type) {
+    //   case "acid_rain":
+    //     payload.append("acid_power", additionalData.acid_power);
+    //     break;
+    //   case "hurricane":
+    //     payload.append("wind_speed", additionalData.wind_speed);
+    //     break;
+    //   case "earthquake":
+    //     payload.append("earthquake_power", additionalData.earthquake_power);
+    //     break;
+    // }
 
-    this.$axios.$post("/events", payload)
-    .then((res) => {
-    })
-    .catch((err) => console.log(err));
-  }
+    // let payload = {};
+    // payload["type"] = type;
+    // payload["date"] = date;
+    // payload["victims"] = victims;
+
+    // payload["acid_power"] = additionalData.acid_power;
+    // payload["wind_speed"] = additionalText;
+    // payload["earthquake_power"] = additionalText;
+
+    this.$axios
+      .$post("/events", payload)
+      .then((res) => {
+        console.log(payload);
+      })
+      .catch((err) => console.log(err));
+  },
 };
 
 export default {

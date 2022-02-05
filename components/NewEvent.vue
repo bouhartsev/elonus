@@ -3,20 +3,6 @@
     <div v-if="form">
       <div>
         <label style="display: block">
-          {{ form.fields.type.title }}
-          <div v-if="form.fields.type.type === 'string'">
-            <v-text-field v-model="typeText"></v-text-field>
-          </div>
-          <div v-if="form.fields.type.type === 'select'">
-            <v-select
-              v-model="typeSelect"
-              :items="form.fields.type.values"
-            ></v-select>
-          </div>
-        </label>
-      </div>
-      <div>
-        <label style="display: block">
           {{ form.fields.date.title }}
           <div v-if="form.fields.date.type === 'string'">
             <v-text-field v-model="dateText"></v-text-field>
@@ -29,6 +15,21 @@
           </div>
         </label>
       </div>
+      <div>
+        <label style="display: block">
+          {{ form.fields.type.title }}
+          <div v-if="form.fields.type.type === 'string'">
+            <v-text-field v-model="typeText"></v-text-field>
+          </div>
+          <div v-if="form.fields.type.type === 'select'">
+            <v-select
+              v-model="typeSelect"
+              :items="form.fields.type.values"
+            ></v-select>
+          </div>
+        </label>
+      </div>
+      
       <div>
         <label style="display: block">
           {{ form.fields.victims.title }}
@@ -133,7 +134,9 @@ export default {
           date: this.dateText !== "" ? this.dateText : this.dateSelect,
           victims:
             this.victimsText !== "" ? this.victimsText : this.victimsSelect,
-          additionalData,
+          acid_power: this.additionalText,
+          wind_speed: this.additionalText,
+          earthquake_power: this.additionalText,
         });
         this.typeText = ``;
         this.typeSelect = ``;
