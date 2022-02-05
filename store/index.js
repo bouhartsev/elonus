@@ -47,7 +47,8 @@ const mutations = {
   SET_PAGES_DATA: (state, payload) => {
     state.home = payload[0];
     state.about = payload[1];
-    state.eventsForm = payload[2];
+    state.eventsCounter = payload[2]?.events;
+    state.eventsForm = payload[3];
   },
 };
 
@@ -55,47 +56,23 @@ const actions = {
   async GET_PAGES_DATA(context, payload) {
     let home = await this.$axios.$get("/home_page");
     let about = await this.$axios.$get("/about_page");
+    let leftWidget = await this.$axios.$get("/left_widget");
     let eventsForm = await this.$axios.$get("/events/form");
-    context.commit("SET_PAGES_DATA", [home, about, eventsForm]);
+    context.commit("SET_PAGES_DATA", [home, about, leftWidget, eventsForm]);
     console.log(payload); //temp - never used
   },
-  async GET_EVENTS(context, payload="test") {
+  async GET_EVENTS(context, payload="action GET EVENTS") {
     let data = await this.$axios.$get("/events");
     context.commit("SET_EVENTS", data);
     console.log(payload); //temp - never used
   },
 
   SEND_FORM_DATA(context, payload) {
-    // let payload = new FormData();
-    // payload.append("type", type);
-    // payload.append("date", date);
-    // payload.append("victims", victims);
-
-    // switch (type) {
-    //   case "acid_rain":
-    //     payload.append("acid_power", additionalData.acid_power);
-    //     break;
-    //   case "hurricane":
-    //     payload.append("wind_speed", additionalData.wind_speed);
-    //     break;
-    //   case "earthquake":
-    //     payload.append("earthquake_power", additionalData.earthquake_power);
-    //     break;
-    // }
-
-    // let payload = {};
-    // payload["type"] = type;
-    // payload["date"] = date;
-    // payload["victims"] = victims;
-
-    // payload["acid_power"] = additionalData.acid_power;
-    // payload["wind_speed"] = additionalText;
-    // payload["earthquake_power"] = additionalText;
-
     this.$axios
       .$post("/events", payload)
       .then((res) => {
-        console.log(payload);
+        payload['id'] = ++this.state.eventsCounter;
+        context.commit("ADD_EVENT", payload);
       })
       .catch((err) => console.log(err));
   },

@@ -29,7 +29,7 @@
           </div>
         </label>
       </div>
-      
+
       <div>
         <label style="display: block">
           {{ form.fields.victims.title }}
@@ -89,6 +89,7 @@ export default {
   }),
   methods: {
     send: function (evt) {
+      this.$store.dispatch("GET_EVENTS"); // new events from others (updating)
       evt.preventDefault();
       if (
         (this.typeText !== "" || this.typeSelect !== "") &&
@@ -96,48 +97,24 @@ export default {
         (this.victimsText !== "" || this.victimsSelect !== "") &&
         this.additionalText !== ""
       ) {
-        let additionalData = {};
-        switch (true) {
-          case this.typeText === "acid_rain":
-            additionalData = {
-              acid_power: this.additionalText,
-            };
-            break;
-          case this.typeSelect === "acid_rain":
-            additionalData = {
-              acid_power: this.additionalText,
-            };
-            break;
-          case this.typeText === "hurricane":
-            additionalData = {
-              wind_speed: this.additionalText,
-            };
-            break;
-          case this.typeSelect === "hurricane":
-            additionalData = {
-              wind_speed: this.additionalText,
-            };
-            break;
-          case this.typeText === "earthquake":
-            additionalData = {
-              earthquake_power: this.additionalText,
-            };
-            break;
-          case this.typeSelect === "earthquake":
-            additionalData = {
-              earthquake_power: this.additionalText,
-            };
-            break;
-        }
-        this.$store.dispatch("SEND_FORM_DATA", {
+        let payload = {
           type: this.typeText !== "" ? this.typeText : this.typeSelect,
           date: this.dateText !== "" ? this.dateText : this.dateSelect,
           victims:
             this.victimsText !== "" ? this.victimsText : this.victimsSelect,
-          acid_power: this.additionalText,
-          wind_speed: this.additionalText,
-          earthquake_power: this.additionalText,
-        });
+        };
+        switch (payload.type) {
+          case "acid_rain":
+            payload["acid_power"] = this.additionalText;
+            break;
+          case "hurricane":
+            payload["wind_speed"] = this.additionalText;
+            break;
+          default:
+            payload["earthquake_power"] = this.additionalText;
+            break;
+        }
+        this.$store.dispatch("SEND_FORM_DATA", payload);
         this.typeText = ``;
         this.typeSelect = ``;
         this.dateText = ``;
@@ -145,7 +122,6 @@ export default {
         this.victimsText = ``;
         this.victimsSelect = ``;
         this.additionalText = ``;
-        this.$store.dispatch("GET_EVENTS");
       }
     },
   },

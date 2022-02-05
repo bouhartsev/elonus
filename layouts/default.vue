@@ -7,7 +7,7 @@
           :key="i"
           :to="item.to"
           router
-          exact
+          :exact="item.title!='Events'"
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
