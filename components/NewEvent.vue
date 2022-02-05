@@ -89,7 +89,7 @@ export default {
   }),
   methods: {
     send: function (evt) {
-      this.$store.dispatch("GET_EVENTS"); // new events from others (updating)
+      // this.$store.dispatch("GET_EVENTS"); // new events from others (updating)
       evt.preventDefault();
       if (
         (this.typeText !== "" || this.typeSelect !== "") &&
