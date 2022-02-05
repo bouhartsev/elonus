@@ -43,6 +43,7 @@ const mutations = {
   },
   ADD_EVENT: (state, payload) => {
     state.events.push(payload);
+    state.eventsCounter++;
   },
   SET_PAGES_DATA: (state, payload) => {
     state.home = payload[0];
@@ -71,7 +72,7 @@ const actions = {
     this.$axios
       .$post("/events", payload)
       .then((res) => {
-        payload['id'] = ++this.state.eventsCounter;
+        payload['id'] = this.state.eventsCounter+1;
         context.commit("ADD_EVENT", payload);
       })
       .catch((err) => console.log(err));
