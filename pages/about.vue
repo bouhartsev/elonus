@@ -20,6 +20,9 @@
 
 <script>
 export default {
-  name: 'InspirePage'
+  name: 'InspirePage',
+  created() {
+    this.$store.commit("SET_TITLE", "About");
+  },
 }
 </script>

@@ -8,7 +8,6 @@
           :to="item.to"
           router
           exact
-          @click="title = item.title"
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -18,13 +17,19 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <v-container slot="append">
+            <v-divider />
+            <!-- 0 if home page!!! -->
+            Events counter: {{ eventsCounter }}
+        </v-container>
     </v-navigation-drawer>
     <v-app-bar clipped-left fixed app>
       <v-app-bar-nav-icon
         @click.stop="drawer = !drawer"
         v-show="$vuetify.breakpoint.mdAndDown"
       />
-      <Logo to="/" @click="title = 'Home'"/>
+      <!-- make link to home -->
+      <Logo/> 
       <v-toolbar-title v-text="title" />
       <v-spacer />
       <!-- <v-btn
@@ -39,19 +44,25 @@
         <Nuxt />
       </v-container>
     </v-main>
-    <v-footer :absolute="true" app>
-      <NuxtLink to="//bouhartsev.top">bouhartsev</NuxtLink><span>&copy; 2022</span>
+    <v-footer :absolute="true" app class="justify-center">
+      <!-- make font-color -->
+      <a href="//bouhartsev.top" target="_blank" style="color:inherit; margin-right: 0.5em;">bouhartsev</a><span>&copy; 2022</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "DefaultLayout",
   head() {
     return {
       title: this.title,
     }
+  },
+  computed: {
+    ...mapGetters(["title", "eventsCounter"]),
   },
   data() {
     return {
@@ -68,11 +79,10 @@ export default {
           to: "/about",
         },
       ],
-      title: "Home",
     };
   },
-  mounted() {
-    console.log(this.$meta().resume().metaInfo.title);
-  }
+  beforeCreate() {
+    this.$store.dispatch("GET_PAGES_DATA", "action GET_PAGES_DATA");
+  },
 };
 </script>
