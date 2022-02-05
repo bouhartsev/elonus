@@ -1,12 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-        v-if="!home"
-      ></v-progress-circular
-    >
+    <Loader :data="home"/>
     <v-col cols="12" sm="8" md="6" v-if="home">
       <v-img :src="home.image" alt="elonus index" />
       <p v-html="home.text" />

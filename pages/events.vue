@@ -15,8 +15,13 @@
     </v-btn>
     <v-dialog v-model="fab" max-width="600px" overlay-opacity="0.95">
       <v-container>
-        <NewEvent />
-        <v-btn @click="fab = !fab">Close</v-btn>
+        <v-row>
+          <v-divider/>
+          <v-btn icon dark @click="fab = !fab">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-row>
+        <NewEvent @closeFAB="fab = !fab" />
       </v-container>
     </v-dialog>
   </div>

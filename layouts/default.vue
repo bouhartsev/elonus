@@ -19,7 +19,6 @@
       </v-list>
       <v-container slot="append">
             <v-divider />
-            <!-- 0 if home page!!! -->
             Events counter: {{ eventsCounter }}
         </v-container>
     </v-navigation-drawer>
@@ -28,16 +27,9 @@
         @click.stop="drawer = !drawer"
         v-show="$vuetify.breakpoint.mdAndDown"
       />
-      <!-- make link to home -->
       <Logo/> 
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <!-- <v-btn
-        icon
-        
-      >
-        <v-icon>mdi-question</v-icon>
-      </v-btn> -->
     </v-app-bar>
     <v-main>
       <v-container>
@@ -45,7 +37,6 @@
       </v-container>
     </v-main>
     <v-footer :absolute="true" app class="justify-center">
-      <!-- make font-color -->
       <a href="//bouhartsev.top" target="_blank" style="color:inherit; margin-right: 0.5em;">bouhartsev</a><span>&copy; 2022</span>
     </v-footer>
   </v-app>

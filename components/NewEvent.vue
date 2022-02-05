@@ -58,6 +58,7 @@ export default {
       if (!this.$refs.form.validate()) return false;
       let result = JSON.parse(JSON.stringify(this.formData));
       this.$store.dispatch("SEND_FORM_DATA", result);
+      this.$emit('closeFAB');
       this.$refs.form.reset();
     },
   },

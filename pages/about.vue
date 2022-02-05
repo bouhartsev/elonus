@@ -1,7 +1,8 @@
 <template>
   <v-row>
     <v-col class="text-center">
-      <h2>Это описание страницы</h2>
+      <h2>Page description</h2>
+      <Loader :data="about"/>
       <p v-html="about.text"></p>
     </v-col>
   </v-row>
